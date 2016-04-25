@@ -80,7 +80,7 @@ ARP_PROTOCOL_TYPE_ETHERNET_IP = pack('!HHBB', 0x0001, 0x0800, 0x0006, 0x0004)
 def send_arp(ip, device, sender_mac, broadcast, netmask, arptype,
              request_target_mac=zero_mac):
     #if_ipaddr = socket.gethostbyname(socket.gethostname())
-    if platform.system == 'Windows':
+    if platform.system() == 'Windows':
         sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.SOCK_RAW)#In windows there is no AF_PACKET 
     else:
         sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.SOCK_RAW)
