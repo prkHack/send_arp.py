@@ -28,6 +28,7 @@ import os
 import signal
 import atexit
 import sys
+import platform #Import platform previously so you can use whenever
 from struct import pack
 
 
@@ -79,7 +80,10 @@ ARP_PROTOCOL_TYPE_ETHERNET_IP = pack('!HHBB', 0x0001, 0x0800, 0x0006, 0x0004)
 def send_arp(ip, device, sender_mac, broadcast, netmask, arptype,
              request_target_mac=zero_mac):
     #if_ipaddr = socket.gethostbyname(socket.gethostname())
-    sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.SOCK_RAW)
+    if platform.system == 'Windows':
+        sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.SOCK_RAW)#In windows there is no AF_PACKET 
+    else:
+        sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.SOCK_RAW)
     sock.bind((device, socket.SOCK_RAW))
 
     socket_mac = sock.getsockname()[4]
@@ -147,7 +151,7 @@ def setup_pid_file(file_path):
     # http://stackoverflow.com/a/11858588/83741
     # Only a limited set of signals are available on Windows (see #2)
     # Also see https://docs.python.org/2/library/signal.html#signal.signal
-    import platform
+    
     if platform.system() == 'Windows':
         signal_list = [signal.SIGTERM]
     else:
